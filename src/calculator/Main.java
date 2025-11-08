@@ -1,15 +1,47 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+package calculator;
+
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        try (Scanner scanner = new Scanner(System.in)) {
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+            System.out.print("Enter first number: ");
+            double firstNumber = readDouble(scanner);
+
+            System.out.print("Enter second number: ");
+            double secondNumber = readDouble(scanner);
+
+            System.out.print("Choose operation (+, -, *, /): ");
+            char operation = scanner.next().trim().charAt(0);
+
+            double result = calculate(firstNumber, secondNumber, operation);
+
+            System.out.println("✅ Result: " + result);
+
+        } catch (Exception e) {
+            System.out.println("⚠️ Error: " + e.getMessage());
         }
+    }
+
+    private static double readDouble(Scanner scanner) {
+        while (!scanner.hasNextDouble()) {
+            System.out.print("❌ Invalid input. Please enter a number: ");
+            scanner.next(); // discard invalid input
+        }
+        return scanner.nextDouble();
+    }
+
+    private static double calculate(double num1, double num2, char op) {
+        return switch (op) {
+            case '+' -> num1 + num2;
+            case '-' -> num1 - num2;
+            case '*' -> num1 * num2;
+            case '/' -> {
+                if (num2 == 0) throw new IllegalArgumentException("Cannot divide by zero!");
+                yield num1 / num2;
+            }
+            default -> throw new IllegalArgumentException("Invalid operation: " + op);
+        };
     }
 }
